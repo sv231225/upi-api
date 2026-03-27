@@ -1,7 +1,9 @@
 const express = require("express");
 const fetch = require("node-fetch");
+const cors = require("cors"); 
 
 const app = express();
+const cors = require("cors"); 
 app.use(express.json());
 
 app.post("/check_upi", async (req, res) => {
