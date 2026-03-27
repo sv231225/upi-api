@@ -4,25 +4,39 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors()); // ✅ IMPORTANT
+// ✅ Strong CORS Fix (handles everything)
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"]
+}));
+
+// ✅ Handle preflight requests manually
+app.options("*", cors());
+
+// ✅ JSON parser
 app.use(express.json());
+
+// ============================
+// UPI CHECK API
+// ============================
 
 app.post("/check_upi", async (req, res) => {
 
     const { upi } = req.body;
 
-    if(!upi){
-        return res.json({ error:"UPI required" });
+    if (!upi) {
+        return res.json({ error: "UPI required" });
     }
 
-    try{
+    try {
 
         const response = await fetch(
             "https://aml-gui.chargebackzero.com/report_generation/upi_verify_proxy.php",
             {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     recipientVpa: upi
@@ -36,14 +50,24 @@ app.post("/check_upi", async (req, res) => {
             status: data.status
         });
 
-    }catch(e){
-        res.json({ status:"error" });
+    } catch (e) {
+        res.json({ status: "error" });
     }
 
 });
 
-app.get("/", (req,res)=>{
+// ============================
+// ROOT CHECK
+// ============================
+
+app.get("/", (req, res) => {
     res.send("UPI API is running 🚀");
 });
 
-app.listen(process.env.PORT || 3000);
+// ============================
+// START SERVER
+// ============================
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log("Server running...");
+});
