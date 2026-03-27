@@ -1,24 +1,25 @@
 const express = require("express");
 const fetch = require("node-fetch");
-const cors = require("cors");
 
 const app = express();
 
-// ✅ Strong CORS Fix (handles everything)
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"]
-}));
+// 🔥 MANUAL CORS (STRONG FIX)
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
 
-// ✅ Handle preflight requests manually
-app.options("*", cors());
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
 
-// ✅ JSON parser
+    next();
+});
+
 app.use(express.json());
 
 // ============================
-// UPI CHECK API
+// UPI CHECK
 // ============================
 
 app.post("/check_upi", async (req, res) => {
@@ -57,17 +58,9 @@ app.post("/check_upi", async (req, res) => {
 });
 
 // ============================
-// ROOT CHECK
-// ============================
 
 app.get("/", (req, res) => {
-    res.send("UPI API V2 🚀");
+    res.send("UPI API V3 🚀"); // change text to confirm deploy
 });
 
-// ============================
-// START SERVER
-// ============================
-
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server running...");
-});
+app.listen(process.env.PORT || 3000);
