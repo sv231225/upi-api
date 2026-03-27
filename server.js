@@ -3,8 +3,10 @@ const fetch = require("node-fetch");
 
 const app = express();
 
+console.log("🔥 SERVER FILE LOADED 🔥");
+
 // ============================
-// 🔥 STRONG CORS FIX
+// 🔥 CORS FIX
 // ============================
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,16 +23,23 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // ============================
-// ✅ TEST ROUTE (VERY IMPORTANT)
+// ✅ ROOT CHECK
 // ============================
-app.get("/test-api", (req, res) => {
+app.get("/", (req, res) => {
+    res.send("UPI API FINAL WORKING 🚀");
+});
+
+// ============================
+// ✅ TEST ROUTE (DEBUG)
+// ============================
+app.get("/test", (req, res) => {
     res.send("TEST OK ✅");
 });
 
 // ============================
 // ✅ UPI CHECK ROUTE
 // ============================
-app.post("/check-upi", async (req, res) => {
+app.post("/check_upi", async (req, res) => {
 
     const { upi } = req.body;
 
@@ -60,20 +69,19 @@ app.post("/check-upi", async (req, res) => {
         });
 
     } catch (e) {
-        res.status(500).json({ status: "error", message: e.toString() });
+        res.status(500).json({
+            status: "error",
+            message: e.toString()
+        });
     }
 
 });
 
 // ============================
-// ROOT
+// 🚀 START SERVER (IMPORTANT)
 // ============================
-app.get("/", (req, res) => {
-    res.send("UPI API FINAL WORKING 🚀");
-});
+const PORT = process.env.PORT || 3000;
 
-// ============================
-
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server started 🚀");
+app.listen(PORT, "0.0.0.0", () => {
+    console.log("Server started on port:", PORT);
 });
