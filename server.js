@@ -61,7 +61,7 @@ app.post("/check_upi", async (req, res) => {
 // ============================
 
 app.get("/", (req, res) => {
-    res.send("UPI API is running 🚀");
+    res.send("UPI API V2");
 });
 
 // ============================
