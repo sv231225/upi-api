@@ -3,7 +3,9 @@ const fetch = require("node-fetch");
 
 const app = express();
 
-// 🔥 MANUAL CORS (STRONG FIX)
+// ============================
+// 🔥 STRONG CORS FIX
+// ============================
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -19,15 +21,21 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // ============================
-// UPI CHECK
+// ✅ TEST ROUTE (VERY IMPORTANT)
 // ============================
+app.get("/test", (req, res) => {
+    res.send("TEST OK ✅");
+});
 
+// ============================
+// ✅ UPI CHECK ROUTE
+// ============================
 app.post("/check_upi", async (req, res) => {
 
     const { upi } = req.body;
 
     if (!upi) {
-        return res.json({ error: "UPI required" });
+        return res.status(400).json({ error: "UPI required" });
     }
 
     try {
@@ -48,19 +56,24 @@ app.post("/check_upi", async (req, res) => {
         const data = await response.json();
 
         res.json({
-            status: data.status
+            status: data.status || "unknown"
         });
 
     } catch (e) {
-        res.json({ status: "error" });
+        res.status(500).json({ status: "error", message: e.toString() });
     }
 
 });
 
 // ============================
-
+// ROOT
+// ============================
 app.get("/", (req, res) => {
-    res.send("UPI API V3 🚀"); // change text to confirm deploy
+    res.send("UPI API FINAL WORKING 🚀");
 });
 
-app.listen(process.env.PORT || 3000);
+// ============================
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log("Server started 🚀");
+});
