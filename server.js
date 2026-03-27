@@ -23,14 +23,14 @@ app.use(express.json());
 // ============================
 // ✅ TEST ROUTE (VERY IMPORTANT)
 // ============================
-app.get("/test", (req, res) => {
+app.get("/test-api", (req, res) => {
     res.send("TEST OK ✅");
 });
 
 // ============================
 // ✅ UPI CHECK ROUTE
 // ============================
-app.post("/check_upi", async (req, res) => {
+app.post("/check-upi", async (req, res) => {
 
     const { upi } = req.body;
 
